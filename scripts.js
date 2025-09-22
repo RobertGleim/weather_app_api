@@ -12,6 +12,8 @@ cityInput.addEventListener("keypress", function(e) {
 
 async function getWeather() {
     const city = cityInput.value.trim();
+    console.log('Input value:', city); // Debug log
+    
     if (!city) {
         weatherInfo.innerHTML = "<p>Please enter a city name.</p>";
         return;
@@ -19,17 +21,49 @@ async function getWeather() {
     
     weatherInfo.innerHTML = "<p>Loading...</p>";
     
-    try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`);
-        const data = await response.json();
-        
-        if (data.cod === 200) {
-            displayWeather(data);
-        } else {
-            weatherInfo.innerHTML = "<p>City not found.</p>";
+    const isZipCode = /^\d{5}$/.test(city);
+    console.log('Is zip code:', isZipCode); // Debug log
+    
+    if (isZipCode) {
+        console.log('Processing zip code...'); // Debug log
+        try {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?zip=${city},US&units=imperial&appid=${apiKey}`;
+            console.log('API URL:', apiUrl); // Debug log
+            
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            
+            console.log('API Response:', data); // Debug log
+            console.log('Country:', data.sys?.country); // Debug log
+            
+            if (data.cod === 200) {
+                if (data.sys.country !== 'US') {
+                    console.log('Blocking non-US result'); // Debug log
+                    weatherInfo.innerHTML = "<p>This zip code is not in the United States.</p>";
+                    return;
+                }
+                console.log('Displaying US weather'); // Debug log
+                displayWeather(data);
+            } else {
+                weatherInfo.innerHTML = "<p>US zip code not found.</p>";
+            }
+        } catch (error) {
+            console.error('Error:', error); // Debug log
+            weatherInfo.innerHTML = "<p>Error loading weather data.</p>";
         }
-    } catch (error) {
-        weatherInfo.innerHTML = "<p>Error loading weather data.</p>";
+    } else {
+        try {
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`);
+            const data = await response.json();
+            
+            if (data.cod === 200) {
+                displayWeather(data);
+            } else {
+                weatherInfo.innerHTML = "<p>City not found.</p>";
+            }
+        } catch (error) {
+            weatherInfo.innerHTML = "<p>Error loading weather data.</p>";
+        }
     }
 }
 

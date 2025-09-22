@@ -106,9 +106,11 @@ body {
   width: 360px;
   height: 30px;
   border-radius: 10px;
-  padding-left: 10px;
+  padding: 0 10px;
   font-size: 16px;
   border: none;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .search-button {
@@ -287,6 +289,12 @@ body {
   .header {
     font-size: 48px;
   }
+  
+  .input-box {
+    width: 420px;
+    font-size: 18px;
+    height: 35px;
+  }
 }
 
 @media (max-width: 1199px) and (min-width: 992px) {
@@ -311,6 +319,8 @@ body {
   
   .input-box {
     width: 280px;
+    font-size: 14px;
+    height: 28px;
   }
   
   .header {
@@ -345,6 +355,9 @@ body {
   .input-box {
     width: 100%;
     margin-right: 0;
+    font-size: 14px;
+    height: 35px;
+    padding: 0 12px;
   }
   
   .search-button {
@@ -426,6 +439,9 @@ body {
   .input-box {
     width: 100%;
     margin-right: 0;
+    font-size: 12px;
+    height: 32px;
+    padding: 0 10px;
   }
   
   .search-button {
